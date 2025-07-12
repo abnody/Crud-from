@@ -4,11 +4,11 @@ export interface FieldOption {
 }
 
 export interface Field {
-  name?: string;
+  name: string;
   type: string;
   label?: string;
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: string|boolean;
   value?: string;
   options?: FieldOption[];
 }

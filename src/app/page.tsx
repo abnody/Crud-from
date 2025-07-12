@@ -1,5 +1,5 @@
 "use client";
-
+import { z } from "zod";
 import { useState } from "react";
 import CrudForm from "./_Crud/page";
 import { Button } from "@/components/ui/button";
@@ -7,31 +7,35 @@ import type { Field } from "../app/interface";
 
 export default function Home() {
   const fields: Field[] = [
-    { name: "email", type: "email", label: "Email" },
-    { name: "password", type: "password", label: "Password" },
+    { name: "email", type: "email", label: "Email", defaultValue:"abcd@gmail.com" },
+    { name: "password", type: "password", label: "Password",defaultValue:"01127769663" },
     {
       name: "gender",
       type: "select",
       placeholder: "Select Gender",
+      defaultValue:"female",
       options: [
         { value: "male", placeholder: "Male" },
         { value: "female", placeholder: "Female" },
       ],
     },
-    { name: "dob", type: "date", placeholder: "Choose birth date" },
-    { name: "terms", type: "checkbox", label: "Accept Terms" },
+    { name: "dob", type: "date", placeholder: "Choose birth date", defaultValue:"2000-01-01" },
+    { name: "terms", type: "checkbox", label: "Accept Terms", defaultValue: true },
   ];
 
-  const defaultValues = {
-    email: "example@nasa.org",
-    password: "123456",
-    gender: "male",
-    dob: "2000-01-01",
-    terms: true,
-  };
+  const validationSchema = z.object({
+    email: z.string().email("Enter a valid Email"),
+    password: z.string().min(10, "Password must be at least 10 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
+
 
   const [isOpen, setIsOpen] = useState(false);
-  const [operation, setOperation] = useState<"add" | "edit" | "review" | "update">("add");
+  const [operation, setOperation] = useState<"add" | "edit" | "review" >("add");
 
   return (
     <div className="p-6 space-y-4">
@@ -53,10 +57,6 @@ export default function Home() {
           setIsOpen(true);
         }}>Review</Button>
 
-        <Button onClick={() => {
-          setOperation("update");
-          setIsOpen(true);
-        }}>Update</Button>
       </div>
 
       {isOpen && (
@@ -66,7 +66,7 @@ export default function Home() {
           setIsOpen={setIsOpen}
           operation={operation}
           asDialog={true}
-          defaultValues={operation === "add" ? undefined : defaultValues}
+          validationSchema={validationSchema}
         />
       )}
     </div>
