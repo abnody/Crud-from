@@ -20,18 +20,18 @@ export default function Home() {
       ],
     },
     { name: "dob", type: "date", placeholder: "Choose birth date", defaultValue:"2000-01-01" },
+    { name: "file", type: "file", placeholder: "Choose file date"},
     { name: "terms", type: "checkbox", label: "Accept Terms", defaultValue: true },
   ];
 
   const validationSchema = z.object({
     email: z.string().email("Enter a valid Email"),
     password: z.string().min(10, "Password must be at least 10 characters"),
-    confirmPassword: z.string(),
+    gender: z.string(),
+    dob: z.string(),
+    terms: z.boolean(),
+    file: z.any()
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
-    path: ["confirmPassword"],
-  });
 
 
   const [isOpen, setIsOpen] = useState(false);
