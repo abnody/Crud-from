@@ -7,8 +7,8 @@ import type { Field } from "../app/interface";
 
 export default function Home() {
   const fields: Field[] = [
-    { name: "email", type: "email", label: "Email", defaultValue:"abcd@gmail.com" },
-    { name: "password", type: "password", label: "Password",defaultValue:"01127769663" },
+    { name: "email", type: "email", label: "Email", defaultValue:"abcd@gmail.com" ,step:1},
+    { name: "password", type: "password", label: "Password",defaultValue:"01127769663", step:1},
     {
       name: "gender",
       type: "select",
@@ -17,12 +17,14 @@ export default function Home() {
       options: [
         { value: "male", placeholder: "Male" },
         { value: "female", placeholder: "Female" },
-      ],
+      ],step:2
     },
-    { name: "dob", type: "date", placeholder: "Choose birth date", defaultValue:"2000-01-01" },
-    { name: "file", type: "file", placeholder: "Choose file date"},
-    { name: "terms", type: "checkbox", label: "Accept Terms", defaultValue: true },
+    { name: "dob", type: "date", placeholder: "Choose birth date", defaultValue:"2000-01-01",step:2 },
+    { name: "file", type: "file", placeholder: "Choose file date",step:3},
+    { name: "terms", type: "checkbox", label: "Accept Terms", defaultValue: true, step:3 },
   ];
+
+  const steps=[1,2,3]
 
   const validationSchema = z.object({
     email: z.string().email("Enter a valid Email"),
@@ -35,7 +37,7 @@ export default function Home() {
 
 
   const [isOpen, setIsOpen] = useState(false);
-  const [operation, setOperation] = useState<"add" | "edit" | "review" >("add");
+  const [operation, setOperation] = useState<"add" | "edit" | "preview" >("add");
 
   return (
     <div className="p-6 space-y-4">
@@ -53,7 +55,7 @@ export default function Home() {
         }}>Edit</Button>
 
         <Button onClick={() => {
-          setOperation("review");
+          setOperation("preview");
           setIsOpen(true);
         }}>Review</Button>
 
@@ -67,6 +69,7 @@ export default function Home() {
           operation={operation}
           asDialog={true}
           validationSchema={validationSchema}
+          steps={steps}
         />
       )}
     </div>
